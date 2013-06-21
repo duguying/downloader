@@ -11,6 +11,7 @@ class IndexAction extends Action {
 	 * 主页
 	 */
     public function index(){
+    	checkDir();
 		import('@.Yuol.url');
 		import('@.Yuol.count');
 		$this->assign('conf', json_encode($this->config));
@@ -39,13 +40,6 @@ class IndexAction extends Action {
 			$this->display(APP_PATH.'Tpl/old/index.html');
 		}
     }
-    function test() {
-//     	http://10.10.11.242:8080/admin/upload/images/20134215115334018.zip
-//    	import('@.Yuol.getmime');
-//    	$file="http://localhost/download/test.pptx";
-//		$filemime=get_headers($file);
-//		dump($filemime);
-		dump(APP_PATH);
-    }
+    
 
 }
