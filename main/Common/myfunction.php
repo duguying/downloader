@@ -92,3 +92,12 @@ function download($url, $local) {
 	}
 	return $r;
 }
+/**
+ * 检查下载目录是否存在,不存在则创建
+ */
+function checkDir(){
+	if(!is_dir(C('STORE_PATH'))){
+		mkdir(C('STORE_PATH'));
+		file_put_contents(C('STORE_PATH').".htaccess","order allow,denydeny from all");
+	}
+}
