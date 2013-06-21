@@ -1,0 +1,305 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel = "Shortcut Icon" href="favicon.ico">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$Think.lang.l_title}</title>
+<link href="{$config['root']}Public/css/style.css" rel="stylesheet" />
+<style type="text/css">
+#main {
+	position: relative;
+	left: 0;
+	top: 10px;
+	width: 960px;
+	height: 100%;
+	margin: 0 auto;
+	z-index: 1;
+}
+.msg {
+	display: inline-block;
+}
+.form {
+	display: block;
+    text-align: center;
+}
+.url {
+	position: relative;
+	height: 30px;
+	/*margin-left: 20%;*/
+    /*font-size: 18px;*/
+	width: 50%;
+}
+.btn {
+	background-color: #066;
+	color: #FFF;
+	border-radius: 6px;
+	height: 35px;
+	width: 70px;
+	font-size: 18px;
+	font-weight: bold;
+	padding-bottom: 3px;
+	cursor: pointer;
+}
+.btn:hover {
+	color: #FF0;
+}
+#content {
+	position: relative;
+	height: auto;
+	left: 0;
+	top: 0;
+	width: 474px;
+	margin: 15px auto 0;
+	z-index: 2;
+}
+.tips {
+	color: #069;
+}
+</style>
+<script type="text/javascript" src="{$config['root']}Public/js/jquery-1.9.0.min.js"></script>
+</head>
+
+<body>
+<include file="./main/Tpl/nav_head.html" />
+<div id="main"> <a class="msg"><img src="{$config['root']}Public/img/down.png" style="float:left; cursor:auto" /><font class="tips" style="float:left; height:30px; margin-top: 3px; cursor: auto;">{$Think.lang.l_msg}</font></a>
+  <div class="form">
+    <input type="text" class="url" placeholder="请在此输入文件的网址"/>
+    <input type="button" value="{$Think.lang.l_btntext}" class="btn" />
+  </div>
+  <div id="content">
+    <div id="links">
+      <!--<a href="{$th_url}">迅雷下载</a><br />
+      <a href="{$url}">本地下载</a><br />
+      <a href="{$url}">内网下载</a><br />-->
+    </div>
+    <br />
+    <br />
+    <br />
+    <br />
+  </div>
+
+</div>
+  <div class="copyright">
+    <center>
+      <p>
+        Powered&nbsp;by<a href="http://www.yuol.cn/" target="_blank" title="yuoler's homepage"> <img style="width:16px; height:16px;" src="{$config['root']}Public/img/yuol_b.png" alt="yuol" /> <span> {$Think.lang.l_footyuol}</span> </a>© 2013 <br>{$Think.lang.l_clickmsg}:{$count}
+      </p>
+    </center>
+  </div>
+  <div style="right: 0; bottom: 0;position: fixed;">
+  <a href="?l=zh-cn">中</a>|<a href="?l=en-us">EN</a>
+  </div>
+  <div style="display:none;"><!--站长统计--> 
+    <script type="text/javascript" src="http://tajs.qq.com/stats?sId=23650176" charset="UTF-8"></script> 
+  </div>
+
+<script type="text/javascript">
+
+    var config={$conf};
+    /**
+     * 解析json
+     * @param value json串
+     * @return {Object}
+     */
+    function json(value){
+        return eval('('+value+')');
+    }
+    /**
+     * LocalStorage存取
+     * @return {*}
+     * @constructor
+     */
+    function LS() {
+        if (!window.localStorage) {
+            alert("浏览器不支持LocalStorage")
+        }
+        if (arguments.length == 1) {
+            var a = arguments[0];
+			if("object"==typeof(a)&&a[0]=="clear"){
+				window.localStorage.clear();
+				return "cleared";
+			}else{
+				return window.localStorage.getItem(a);
+			}
+        } else {
+            if (arguments.length == 2) {
+                var a = arguments[0];
+                var b = arguments[1];
+                window.localStorage.removeItem(a);
+                if (b) {
+                    window.localStorage.setItem(a, b)
+                }
+            } else {
+                alert("参数错误\n1个参数：get(key)\n2个参数：set(key,value)")
+            }
+        }
+    };
+    function _jalert(c) {
+        var a = config["root"];
+        function b() {
+            $("#alert_box").css("display", "block");
+            $("body").css("overflow", "hidden");
+            var sty=$("[alert_mask]").attr("style");
+            sty=sty||''+";position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: 100;background-color:#000;opacity:.5;";
+            $("[alert_mask]").attr("style",sty);
+        }
+        function d() {
+            $("#alert_box").css("display", "none");
+            $("body").css("overflow", "scroll");
+            $("[alert_mask]").attr("class", "");
+            $("[alert_mask]").detach();
+            $("#alert_box").remove()
+        }
+        function get() {
+            var cdata = $.ajax({
+                type : "get",
+                url : a + "Public/rs/alert_box.rs",
+                data : "",
+                dataType : "text",
+                async : false,
+				
+            }).responseText;
+            LS('jalert', cdata);
+            return cdata;
+        }
+        function lert() {
+            var g = null;
+            if (LS('jalert') == null) {
+                g=get();
+            } else {
+                g = LS('jalert');
+            }
+            $("body").append(g);
+            $(".alert_content").html(c);
+            b();
+            try {
+                $("#alert_box").draggable()
+            } catch (f) {};
+
+            $(".alert_btn").hover(function(e){
+                $(".alert_btn").css("border", "#903 solid 1px");
+                $(".alert_btn").css("color", "#F00");
+            }, function(e){
+                $(".alert_btn").css("border", "1px solid #000");
+                $(".alert_btn").css("color", "black");
+            });
+
+            $(".alert_btn").click(function (h) {
+                d()
+            })
+        }
+        lert();
+    };
+    function jalert(msg){
+        //if
+        try{_jalert(msg)}catch (e){alert(msg)};
+    }
+    /**
+     * 判断是否为URL
+     * @param str_url URL
+     * @return {Boolean}
+     * @constructor
+     */
+    function IsURL(str_url){
+        var strRegex = "^((https|http|ftp|rtsp|mms)?://)"
+                + "?(([0-9a-zA-Z_!~*'().&=+$%-]+: )?[0-9a-zA-Z_!~*'().&=+$%-]+@)?" //ftp的user@
+                + "(([0-9]{1,3}\.){3}[0-9]{1,3}" // IP形式的URL- 199.194.52.184
+                + "|" // 允许IP和DOMAIN（域名）
+                + "([0-9a-zA-Z_!~*'()-]+\.)*" // 域名- www.
+                + "([0-9a-zA-Z][0-9a-zA-Z-]{0,61})?[0-9a-zA-Z]\." // 二级域名
+                + "[a-zA-Z]{2,6})" // first level domain- .com or .museum
+                + "(:[0-9]{1,4})?" // 端口- :80
+                + "((/?)|" // a slash isn't required if there is no file name
+                + "(/[0-9a-zA-Z_!~*'().;?:@&=+$,%#-]+)+/?)$";
+        if (str_url.match(strRegex)){
+            return (true);
+        }else{
+            return (false);
+        }
+    }
+    /**
+     * 图片预加载
+     * @param url
+     */
+    function preLoadImg(url) {
+        var img = new Image();
+        img.src = url;
+    }
+    $(document).ready(function(e){
+
+        preLoadImg(config['root']+"Public/img/wait.gif")
+        $(".url").val("");
+
+        var dh=LS("download_history");//TODO 本地历史记录处理
+
+
+
+        $(".btn").click(function(e){
+            var url=$(".url").val();
+            //console.log(IsURL(url));
+            if(IsURL(url)){
+                $("#links").html('<img src="'+config['root']+"Public/img/wait.gif"+'" style="width:40px;height:40px;" /><font style="color: #006666;">{$Think.lang.l_downloading}……</font> ')
+                $.ajax({
+                    type: "GET",
+                    url: config['root']+"index.php/geturl/index?url="+encodeURI(url),
+                    dataType: "json",
+                    success:function(v){
+                        //console.log(v);
+                        if(v.error){
+                            jalert(v.error);
+                        }else{
+                            var html_str = '<a href="'+v.th+'">{$Think.lang.l_thunder}</a><br /><a target="_black" href="'+v.lc;
+                            html_str = html_str + '">{$Think.lang.l_local}</a><br /><a target="_black" href="'+v['in']+'">{$Think.lang.l_inner}</a><br />';
+                            $("#links").html(html_str);
+                        }
+                    }
+                });
+            }else{
+                jalert("{$Think.lang.l_alertmsg}");
+            }
+        })
+    })
+</script>
+
+
+<!--[if IE]>
+
+
+
+<script type="text/javascript">
+    /**
+     *修正IE中placeholder属性
+     * @author:李俊
+     **/
+    $(document).ready(function(e){
+        var plmsg=$("input[placeholder]").attr("placeholder");
+        var tstyle=$("input[placeholder]").css("color");
+        console.log(plmsg);
+        $("input[placeholder]").val(plmsg);
+        $("input[placeholder]").css("color","#CCC");
+        $("input[placeholder]").focus(function(e){
+            if($("input[placeholder]").val()==plmsg){
+                $("input[placeholder]").val("");
+                $("input[placeholder]").css("color",tstyle);
+            }
+        })
+        $("input[placeholder]").blur(function(e){
+            if($("input[placeholder]").val()==""){
+                $("input[placeholder]").val($("input[placeholder]").attr("placeholder"));
+                $("input[placeholder]").css("color","#CCC")
+            }
+        })
+    })
+</script>
+
+<![endif]-->
+
+<!-- JiaThis Button BEGIN -->
+<script type="text/javascript" src="http://v3.jiathis.com/code/jiathis_r.js?uid=1364315096779946&move=0&amp;btn=r3.gif" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+</body>
+</html>
+
+
+

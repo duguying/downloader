@@ -1,0 +1,161 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+    <link rel = "Shortcut Icon" href="favicon.ico">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>{$Think.lang.l_title}</title>
+    <link href="{$config['root']}Public/css/style.css" rel="stylesheet" />
+    <style type="text/css">
+    </style>
+    <style type="text/css">
+        #main {
+            position: relative;
+            left: 0;
+            top: 10px;
+            width: 960px;
+            height: 100%;
+            margin: 0 auto;
+            z-index: 1;
+        }
+        .msg {
+            display: inline-block;
+        }
+        .form {
+            display: block;
+            text-align: center;
+        }
+        .url {
+            position: relative;
+            height: 30px;
+            font-size: 25px;
+            width: 50%;
+        }
+        .btn {
+            background-color: #066;
+            color: #FFF;
+            border-radius: 6px;
+            height: 35px;
+            width: 70px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        #content {
+            position: relative;
+            height: auto;
+            left: 0;
+            top: 0;
+            width: 474px;
+            margin: 15px auto 0;
+            z-index: 2;
+        }
+        .tips {
+            color: #069;
+        }
+    </style>
+    <script type="text/javascript" src="{$config['root']}Public/js/jquery-1.8.0.min.js"></script>
+</head>
+<body>
+<include file="./main/Tpl/nav_head.html" />
+<div id="main"> <a class="msg"><img src="{$config['root']}Public/img/down.png" style="float:left; cursor:auto" /><font class="tips" style="float:left; height:30px; margin-top: 3px; cursor: auto;">{$Think.lang.l_msg}</font></a>
+    <div class="form">
+        <form action="./" method="get">
+            <input type="text" class="url" name="url" placeholder="请在此输入文件的网址"/>
+            <input type="submit" value="{$Think.lang.l_btntext}" class="btn" />
+        </form>
+    </div>
+    <div id="content">
+        <div id="links">
+            <if condition="$urlArray">
+                <a href="{$urlArray['th']}">{$Think.lang.l_thunder}</a><br />
+                <a href="{$urlArray['lc']}">{$Think.lang.l_local}</a><br />
+                <a href="{$urlArray['in']}">{$Think.lang.l_inner}</a><br />
+            </if>
+        </div>
+        <br />
+        <br />
+        <br />
+        <br />
+    </div>
+</div>
+<div class="copyright">
+    <center>
+        <p> Powered&nbsp;by<a href="http://www.yuol.cn/" target="_blank" title="yuoler's homepage"> <img style="width:16px; height:16px;" src="{$config['root']}Public/img/yuol_b.png" alt="yuol" /> <span> {$Think.lang.l_footyuol}</span> </a>© 2013 <br>{$Think.lang.l_clickmsg}:{$count}</p>
+    </center>
+</div>
+<div style="right: 0; top: 0;position: absolute; z-index: 2000; color: white;">
+    <a href="?l=zh-cn" style=" color: white;">中</a>|<a href="?l=en-us" style=" color: white;">EN</a>
+</div>
+<div style="display:none;"><!--站长统计-->
+    <script type="text/javascript" src="http://tajs.qq.com/stats?sId=23650176" charset="UTF-8"></script>
+</div>
+<!--[if IE]>
+<script>
+    /**
+     *修正IE中placeholder属性
+     * @author:李俊
+     **/
+    $(document).ready(function(e){
+        var plmsg=$("input[placeholder]").attr("placeholder");
+        var tstyle=$("input[placeholder]").css("color");
+        $("input[placeholder]").val(plmsg);
+        $("input[placeholder]").css("color","#CCC")
+        $("input[placeholder]").focus(function(e){
+            if($("input[placeholder]").val()==plmsg){
+                $("input[placeholder]").val("");
+                $("input[placeholder]").css("color",tstyle);
+            }
+        })
+        $("input[placeholder]").blur(function(e){
+            if($("input[placeholder]").val()==""){
+                $("input[placeholder]").val($("input[placeholder]").attr("placeholder"));
+                $("input[placeholder]").css("color","#CCC")
+            }
+        })
+    })
+    
+    /**
+     * IE6上PNG透明修正
+     * @author unknow
+     * @return {[type]} [description]
+     */
+    function correctPNG(){
+          for(var i=0; i<document.images.length; i++){
+               var img = document.images[i]
+               var imgName = img.src.toUpperCase()
+               if (imgName.substring(imgName.length-3, imgName.length) == "PNG"){
+                   var imgID = (img.id) ? "id='" + img.id + "' " : "";
+                   var imgClass = (img.className) ? "class='" + img.className + "' " : "";
+                   var imgTitle = (img.title) ? "title='" + img.title + "' " : "title='" + img.alt + "' ";
+                   var imgStyle = "display:inline-block;" + img.style.cssText;
+                   if (img.align == "left") imgStyle = "float:left;" + imgStyle;
+                   if (img.align == "right") imgStyle = "float:right;" + imgStyle;
+                   if (img.parentElement.href) imgStyle = "cursor:hand;" + imgStyle ;
+                   var strNewHTML = "<span " + imgID + imgClass + imgTitle
+                       + " style=\"" + "width:" + img.width + "px; height:" + img.height + "px;" + imgStyle + ";"
+                       + "filter:progid:DXImageTransform.Microsoft.AlphaImageLoader"
+                       + "(src=\'" + img.src + "\', sizingMethod='scale');\"></span>";
+                   img.outerHTML = strNewHTML;
+                   i = i-1;
+               };
+          };
+    };
+
+
+    $(document).ready(function(e){
+        if(navigator.userAgent.indexOf("MSIE")>-1){
+            correctPNG();
+        };
+    })
+
+
+    
+    </script>
+<![endif]-->
+<!-- JiaThis Button BEGIN -->
+<script type="text/javascript" src="http://v3.jiathis.com/code/jiathis_r.js?uid=1364315096779946&move=0&amp;btn=r3.gif" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+</body>
+</html>
+
